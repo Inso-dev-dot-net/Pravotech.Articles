@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Domain.Tests", "Pravotech.Articles.Domain.Tests\Pravotech.Articles.Domain.Tests.csproj", "{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Domain.Tests", "src\Pravotech.Articles.Domain.Tests\Pravotech.Articles.Domain.Tests.csproj", "{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Infrastructure", "src\Pravotech.Articles.Infrastructure\Pravotech.Articles.Infrastructure.csproj", "{76CB294A-2ABC-4CB2-8B34-571AB92D314B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{7A324F0E-5110-488C-83E1-501DDEEA68C6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E728B236-B724-457C-A8B8-FBF00A021DE4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{76CB294A-2ABC-4CB2-8B34-571AB92D314B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AE03AED-C701-4E03-8BB1-0588E67F1478}

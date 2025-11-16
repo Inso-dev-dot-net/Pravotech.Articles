@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pravotech.Articles.Application\Pravotech.Articles.Application.csproj" />
+    <ProjectReference Include="..\Pravotech.Articles.Infrastructure\Pravotech.Articles.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

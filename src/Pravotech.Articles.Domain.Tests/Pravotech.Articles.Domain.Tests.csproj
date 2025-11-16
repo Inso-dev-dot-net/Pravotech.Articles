@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Pravotech.Articles.Domain\Pravotech.Articles.Domain.csproj" />
+    <ProjectReference Include="..\Pravotech.Articles.Domain\Pravotech.Articles.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
