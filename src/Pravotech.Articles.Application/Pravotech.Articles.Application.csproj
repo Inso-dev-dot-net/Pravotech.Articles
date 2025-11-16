@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
-    <Folder Include="Abstractions\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pravotech.Articles.Domain\Pravotech.Articles.Domain.csproj" />
   </ItemGroup>
 
 </Project>
