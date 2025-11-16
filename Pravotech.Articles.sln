@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.WebApi",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Domain", "src\Pravotech.Articles.Domain\Pravotech.Articles.Domain.csproj", "{7A324F0E-5110-488C-83E1-501DDEEA68C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Application", "src\Pravotech.Articles.Application\Pravotech.Articles.Application.csproj", "{E728B236-B724-457C-A8B8-FBF00A021DE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,18 @@ Global
 		{7A324F0E-5110-488C-83E1-501DDEEA68C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A324F0E-5110-488C-83E1-501DDEEA68C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A324F0E-5110-488C-83E1-501DDEEA68C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{014CBDC7-D5FF-4FF4-9CF7-02E48B09D54C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{7A324F0E-5110-488C-83E1-501DDEEA68C6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{E728B236-B724-457C-A8B8-FBF00A021DE4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AE03AED-C701-4E03-8BB1-0588E67F1478}
