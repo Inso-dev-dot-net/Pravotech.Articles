@@ -14,5 +14,5 @@ public sealed class SectionDto
     public IReadOnlyList<string> Tags { get; init; } = Array.Empty<string>();
 
     /// <summary>Количество статей внутри раздела</summary>
-    public int ArticleCount { get; init; }
+    public int ArticlesCount { get; init; }
 }

@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pravotech.Articles.Application.Abstractions;
+using Pravotech.Articles.Domain.Services;
 using Pravotech.Articles.Infrastructure.Persistence;
+using Pravotech.Articles.Infrastructure.Queries;
 
 namespace Pravotech.Articles.Infrastructure;
 
@@ -28,6 +31,10 @@ public static class DependencyInjection
         {
             options.UseNpgsql(connectionString);
         });
+
+        // Регистрируем нужные сервисы для WebAPI
+        services.AddSingleton<ISectionKeyService, SectionKeyService>();
+        services.AddScoped<ICatalogQueries, EfCatalogQueries>();
 
         return services;
     }
