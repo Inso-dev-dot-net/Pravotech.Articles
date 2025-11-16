@@ -15,6 +15,9 @@ public sealed class ArticleTag
     /// <exception cref="ArgumentOutOfRangeException">Если position меньше 0</exception>
     public static ArticleTag Create(Guid tagId, int position)
     {
+        if (tagId == Guid.Empty)
+            throw new ArgumentException("Article id cannot be empty", nameof(tagId));
+        
 
         if (position < 0)
         {

@@ -22,6 +22,9 @@ public sealed class Tag
     /// <param name="name">Имя тега</param>
     public static Tag Create(Guid id, TagName name)
     {
+        if (id == Guid.Empty)
+            throw new ArgumentException("Article id cannot be empty", nameof(id));
+
         Tag tag = new()
         {
             Id = id,
