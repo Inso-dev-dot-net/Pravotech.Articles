@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Domain.Tests", "Pravotech.Articles.Domain.Tests\Pravotech.Articles.Domain.Tests.csproj", "{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E728B236-B724-457C-A8B8-FBF00A021DE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
