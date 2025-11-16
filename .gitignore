@@ -1,0 +1,72 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# Rider
+.idea/
+*.iml
+
+# User-specific files
+*.rsuser
+*.userprefs
+*.vscode/
+
+# Backup & temp
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+
+# Build artifacts
+artifacts/
+publish/
+dist/
+out/
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+*.lock.json
+*.deps.json
+
+# EF Core
+[Mm]igrations/*Designer.cs
+[Mm]igrations/__EFMigrationsHistory*
+
+# Docker
+docker-compose.override.yml
+docker-compose*.log
+.docker/
+docker-data/
+pgdata/
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# JetBrains Rider caches
+.idea/
+*.DotSettings.user
+_ReSharper*/
+_ReSharper.Caches/
+
+# Local env files
+.env
+.env.*.local
