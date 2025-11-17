@@ -5,6 +5,8 @@ using Pravotech.Articles.Application.Abstractions;
 using Pravotech.Articles.Domain.Services;
 using Pravotech.Articles.Infrastructure.Persistence;
 using Pravotech.Articles.Infrastructure.Queries;
+using Pravotech.Articles.Infrastructure.Commands;
+
 
 namespace Pravotech.Articles.Infrastructure;
 
@@ -35,6 +37,7 @@ public static class DependencyInjection
         // Регистрируем нужные сервисы для WebAPI
         services.AddSingleton<ISectionKeyService, SectionKeyService>();
         services.AddScoped<ICatalogQueries, EfCatalogQueries>();
+        services.AddScoped<IArticleCommands, EfArticleCommands>();
 
         return services;
     }
