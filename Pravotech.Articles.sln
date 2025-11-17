@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Domain.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.Infrastructure", "src\Pravotech.Articles.Infrastructure\Pravotech.Articles.Infrastructure.csproj", "{76CB294A-2ABC-4CB2-8B34-571AB92D314B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pravotech.Articles.WebApi.Tests", "src\Pravotech.Articles.WebApi.Tests\Pravotech.Articles.WebApi.Tests.csproj", "{B0035469-B532-4D4D-9560-C0466BBB599B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76CB294A-2ABC-4CB2-8B34-571AB92D314B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0035469-B532-4D4D-9560-C0466BBB599B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0035469-B532-4D4D-9560-C0466BBB599B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0035469-B532-4D4D-9560-C0466BBB599B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0035469-B532-4D4D-9560-C0466BBB599B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{E728B236-B724-457C-A8B8-FBF00A021DE4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3F97DBF3-9181-400E-A2A4-FD94D7F28E0B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{76CB294A-2ABC-4CB2-8B34-571AB92D314B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B0035469-B532-4D4D-9560-C0466BBB599B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AE03AED-C701-4E03-8BB1-0588E67F1478}
