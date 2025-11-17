@@ -1,4 +1,4 @@
-services:
+﻿services:
   postgres:
     image: postgres:16
     container_name: pravotech-articles-postgres
@@ -25,6 +25,20 @@ services:
       - postgres
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+
+  webapi:
+    container_name: pravotech-articles-webapi
+    build:
+      context: ..
+      dockerfile: src/Pravotech.Articles.WebApi/Dockerfile
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__ArticlesDatabase: Host=postgres;Port=5432;Database=articles_db;Username=postgres;Password=postgres
+    ports:
+      - "5000:8080"
 
 volumes:
   postgres_data:
