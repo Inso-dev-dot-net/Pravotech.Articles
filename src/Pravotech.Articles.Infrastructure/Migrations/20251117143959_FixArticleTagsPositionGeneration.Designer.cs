@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pravotech.Articles.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Pravotech.Articles.Infrastructure.Persistence;
 namespace Pravotech.Articles.Infrastructure.Migrations
 {
     [DbContext(typeof(ArticlesDbContext))]
-    partial class ArticlesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251117143959_FixArticleTagsPositionGeneration")]
+    partial class FixArticleTagsPositionGeneration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

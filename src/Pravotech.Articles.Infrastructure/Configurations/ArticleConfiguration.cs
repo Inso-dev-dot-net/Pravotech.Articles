@@ -45,7 +45,8 @@ internal sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
                 .IsRequired();
 
             tags.Property(t => t.Position)
-                .IsRequired();
+                .IsRequired()
+                .ValueGeneratedNever();
 
             tags.HasIndex(t => t.TagId);
         });
