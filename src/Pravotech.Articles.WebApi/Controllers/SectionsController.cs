@@ -10,6 +10,7 @@ namespace Pravotech.Articles.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/sections")]
+[Produces("application/json")]
 public sealed class SectionsController : ControllerBase
 {
     private readonly ICatalogQueries _catalogQueries;
@@ -19,8 +20,16 @@ public sealed class SectionsController : ControllerBase
         _catalogQueries = catalogQueries;
     }
 
-    /// <summary>Возвращает список разделов </summary>
+    /// <summary>Возвращает список разделов</summary>
+    /// <remarks>
+    /// Возвращает список разделов каталога статей  
+    /// Разделы формируются автоматически для каждого уникального набора тегов без учета порядка  
+    /// Список разделов сортируется по убыванию количества статей в разделе
+    /// </remarks>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <response code="200">Список разделов успешно получен</response>
     [HttpGet]
+    [ProducesResponseType(typeof(IReadOnlyList<SectionDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSections(
         CancellationToken cancellationToken = default)
     {
@@ -30,14 +39,22 @@ public sealed class SectionsController : ControllerBase
     }
 
     /// <summary>Возвращает все статьи выбранного раздела</summary>
+    /// <remarks>
+    /// Возвращает список статей, принадлежащих выбранному разделу  
+    /// Принадлежность к разделу определяется совпадающим набором тегов без учета порядка  
+    /// Список статей сортируется по дате и времени изменения, а при отсутствии UpdatedAtUtc по CreatedAtUtc по убыванию
+    /// </remarks>
+    /// <param name="id">Идентификатор раздела</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <response code="200">Список статей раздела успешно получен</response>
     [HttpGet("{id:guid}/articles")]
+    [ProducesResponseType(typeof(IReadOnlyList<ArticleDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSectionArticles(
         Guid id,
         CancellationToken cancellationToken = default)
     {
         IReadOnlyList<ArticleDto> articles = await _catalogQueries.GetSectionArticlesAsync(id, cancellationToken);
+
         return Ok(articles);
     }
-
-
 }

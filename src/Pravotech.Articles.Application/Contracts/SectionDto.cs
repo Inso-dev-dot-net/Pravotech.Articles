@@ -1,18 +1,25 @@
 ﻿namespace Pravotech.Articles.Application.Contracts.Sections;
 
-/// <summary>
-/// DTO раздела каталога
-/// </summary>
+/// <summary>Раздел каталога статей</summary>
 public sealed class SectionDto
 {
-    public Guid Id { get; init; }
+    /// <summary>Идентификатор раздела</summary>
+    public Guid Id { get; set; }
 
-    /// <summary>Название раздела (конкатенация тегов через запятую до макс. длинны)</summary>
-    public string Name { get; init; } = default!;
+    /// <summary>Человекочитаемое название раздела</summary>
+    /// <remarks>
+    /// Формируется конкатенацией названий тегов через запятую
+    /// Может быть обрезано до максимально допустимой длины названия раздела
+    /// </remarks>
+    public string Name { get; set; } = default!;
 
     /// <summary>Список тегов раздела</summary>
-    public IReadOnlyList<string> Tags { get; init; } = Array.Empty<string>();
+    /// <remarks>
+    /// Набор тегов определяет раздел без учета порядка
+    /// Порядок в этом списке не влияет на принадлежность статей к разделу
+    /// </remarks>
+    public List<string> Tags { get; set; } = new();
 
-    /// <summary>Количество статей внутри раздела</summary>
-    public int ArticlesCount { get; init; }
+    /// <summary>Количество статей в разделе</summary>
+    public int ArticlesCount { get; set; }
 }
