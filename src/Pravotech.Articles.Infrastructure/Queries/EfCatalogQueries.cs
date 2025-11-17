@@ -15,9 +15,6 @@ internal sealed class EfCatalogQueries : ICatalogQueries
     private readonly ArticlesDbContext _db;
     private readonly ISectionKeyService _sectionKeyService;
 
-    /// <summary>
-    /// Плоское представление связки статья - тег
-    /// </summary>
     private sealed record ArticleTagRow(
         Guid ArticleId,
         string Title,
@@ -53,49 +50,10 @@ internal sealed class EfCatalogQueries : ICatalogQueries
             return Array.Empty<SectionDto>();
         }
 
-        // Группируем строки по статье и восстанавливаем упорядоченный список тегов статьи
-        var articles = rows
-            .GroupBy(r => new { r.ArticleId, r.Title, r.CreatedAtUtc, r.UpdatedAtUtc })
-            .Select(g => new
-            {
-                g.Key.ArticleId,
-                g.Key.Title,
-                g.Key.CreatedAtUtc,
-                g.Key.UpdatedAtUtc,
-                TagsOrdered = g
-                    .OrderBy(x => x.Position)
-                    .Select(x => new
-                    {
-                        x.TagName,
-                        x.TagNameNormalized
-                    })
-                    .ToList()
-            })
-            .ToList();
+        var articles = GroupRowsByArticle(rows);
 
-        // Для каждой статьи считаем SectionKey и SectionId
         var articleWithSectionInfo = articles
-            .Select(a =>
-            {
-                IEnumerable<string> normalizedNames = a.TagsOrdered
-                    .Select(t => t.TagNameNormalized);
-
-                string sectionKey = _sectionKeyService.BuildSectionKey(normalizedNames);
-                Guid sectionId = _sectionKeyService.BuildSectionId(sectionKey);
-
-                return new
-                {
-                    SectionId = sectionId,
-                    SectionKey = sectionKey,
-                    a.ArticleId,
-                    a.Title,
-                    a.CreatedAtUtc,
-                    a.UpdatedAtUtc,
-                    TagNamesOriginal = a.TagsOrdered.Select(t => t.TagName).ToList(),
-                    TagNamesNormalized = a.TagsOrdered.Select(t => t.TagNameNormalized).ToList()
-                };
-            })
-            // Статьи без тегов не попадают ни в один раздел
+            .Select(a => BuildArticleSectionInfo(a.TagsOrdered, a.ArticleId, a.Title, a.CreatedAtUtc, a.UpdatedAtUtc))
             .Where(x => x.SectionId != Guid.Empty && x.TagNamesNormalized.Count > 0)
             .ToList();
 
@@ -104,37 +62,9 @@ internal sealed class EfCatalogQueries : ICatalogQueries
             return Array.Empty<SectionDto>();
         }
 
-        // Группируем статьи по SectionId/SectionKey и считаем разделы
         List<SectionDto> sections = articleWithSectionInfo
-            .GroupBy(x => new { x.SectionId, x.SectionKey })
-            .Select(g =>
-            {
-                Guid sectionId = g.Key.SectionId;
-
-                var firstArticle = g.First();
-
-                List<string> sectionTags = firstArticle.TagNamesOriginal
-                    .Distinct()
-                    .OrderBy(n => n)
-                    .ToList();
-
-                int articlesCount = g
-                    .Select(x => x.ArticleId)
-                    .Distinct()
-                    .Count();
-
-                string sectionName = _sectionKeyService.BuildSectionName(sectionTags);
-
-                SectionDto dto = new SectionDto
-                {
-                    Id = sectionId,
-                    Name = sectionName,
-                    Tags = sectionTags,
-                    ArticlesCount = articlesCount
-                };
-
-                return dto;
-            })
+            .GroupBy(x => x.SectionId)
+            .Select(g => BuildSectionDto(g.Key, g))
             .OrderByDescending(s => s.ArticlesCount)
             .ThenBy(s => s.Name)
             .ToList();
@@ -162,35 +92,13 @@ internal sealed class EfCatalogQueries : ICatalogQueries
             return Array.Empty<ArticleDto>();
         }
 
-        // Группируем по статье и собираем упорядоченный список тегов
-        var articles = rows
-            .GroupBy(r => new { r.ArticleId, r.Title, r.CreatedAtUtc, r.UpdatedAtUtc })
-            .Select(g => new
-            {
-                g.Key.ArticleId,
-                g.Key.Title,
-                g.Key.CreatedAtUtc,
-                g.Key.UpdatedAtUtc,
-                TagsOrdered = g
-                    .OrderBy(x => x.Position)
-                    .Select(x => new
-                    {
-                        x.TagName,
-                        x.TagNameNormalized
-                    })
-                    .ToList()
-            })
-            .ToList();
+        var articles = GroupRowsByArticle(rows);
 
-        // Для каждой статьи заново считаем SectionId и фильтруем по нужному разделу
         var articlesInSection = articles
             .Select(a =>
             {
-                IEnumerable<string> normalizedNames = a.TagsOrdered
-                    .Select(t => t.TagNameNormalized);
-
-                string sectionKey = _sectionKeyService.BuildSectionKey(normalizedNames);
-                Guid computedSectionId = _sectionKeyService.BuildSectionId(sectionKey);
+                Guid computedSectionId = ComputeSectionId(
+                    a.TagsOrdered.Select(t => t.TagNameNormalized));
 
                 return new
                 {
@@ -213,7 +121,7 @@ internal sealed class EfCatalogQueries : ICatalogQueries
         List<ArticleDto> result = articlesInSection
             .Select(a =>
             {
-                DateTimeOffset sortTime = a.UpdatedAtUtc ?? a.CreatedAtUtc;
+                DateTimeOffset sortTime = GetSortTime(a.CreatedAtUtc, a.UpdatedAtUtc);
 
                 List<string> tagNamesInOrder = a.TagsOrdered
                     .Select(t => t.TagName)
@@ -242,7 +150,7 @@ internal sealed class EfCatalogQueries : ICatalogQueries
     }
 
     /// <summary>
-    /// Загружает список связок статья - тег из базы
+    /// Загружает плоский список связок статья - тег из базы
     /// </summary>
     private async Task<List<ArticleTagRow>> LoadArticleTagRowsAsync(CancellationToken ct)
     {
@@ -266,5 +174,119 @@ internal sealed class EfCatalogQueries : ICatalogQueries
             .ToListAsync(ct);
 
         return rows;
+    }
+
+    /// <summary>
+    /// Группирует строки по статье и восстанавливает упорядоченный список тегов
+    /// </summary>
+    private static List<(Guid ArticleId, string Title, DateTimeOffset CreatedAtUtc, DateTimeOffset? UpdatedAtUtc, List<(string TagName, string TagNameNormalized)> TagsOrdered)>
+        GroupRowsByArticle(List<ArticleTagRow> rows)
+    {
+        return rows
+            .GroupBy(r => new { r.ArticleId, r.Title, r.CreatedAtUtc, r.UpdatedAtUtc })
+            .Select(g => (
+                g.Key.ArticleId,
+                g.Key.Title,
+                g.Key.CreatedAtUtc,
+                g.Key.UpdatedAtUtc,
+                TagsOrdered: g
+                    .OrderBy(x => x.Position)
+                    .Select(x => (x.TagName, x.TagNameNormalized))
+                    .ToList()))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Строит SectionId на основе нормализованных имён тегов
+    /// </summary>
+    private Guid ComputeSectionId(IEnumerable<string> normalizedTagNames)
+    {
+        string sectionKey = _sectionKeyService.BuildSectionKey(normalizedTagNames);
+        Guid sectionId = _sectionKeyService.BuildSectionId(sectionKey);
+        return sectionId;
+    }
+
+    /// <summary>
+    /// Строит агрегированную информацию по статье и её разделе
+    /// </summary>
+    private (Guid SectionId,
+        Guid ArticleId,
+        string Title,
+        DateTimeOffset CreatedAtUtc,
+        DateTimeOffset? UpdatedAtUtc,
+        List<string> TagNamesOriginal,
+        List<string> TagNamesNormalized)
+        BuildArticleSectionInfo(
+            List<(string TagName, string TagNameNormalized)> tagsOrdered,
+            Guid articleId,
+            string title,
+            DateTimeOffset createdAtUtc,
+            DateTimeOffset? updatedAtUtc)
+    {
+        List<string> normalized = tagsOrdered
+            .Select(t => t.TagNameNormalized)
+            .ToList();
+
+        Guid sectionId = ComputeSectionId(normalized);
+
+        List<string> original = tagsOrdered
+            .Select(t => t.TagName)
+            .ToList();
+
+        return (sectionId,
+            articleId,
+            title,
+            createdAtUtc,
+            updatedAtUtc,
+            original,
+            normalized);
+    }
+
+    /// <summary>
+    /// Строит SectionDto по группе статей раздела
+    /// </summary>
+    private SectionDto BuildSectionDto(
+        Guid sectionId,
+        IEnumerable<(Guid SectionId,
+            Guid ArticleId,
+            string Title,
+            DateTimeOffset CreatedAtUtc,
+            DateTimeOffset? UpdatedAtUtc,
+            List<string> TagNamesOriginal,
+            List<string> TagNamesNormalized)> group)
+    {
+        var firstArticle = group.First();
+
+        List<string> sectionTags = firstArticle.TagNamesOriginal
+            .Distinct()
+            .OrderBy(n => n)
+            .ToList();
+
+        int articlesCount = group
+            .Select(x => x.ArticleId)
+            .Distinct()
+            .Count();
+
+        string sectionName = _sectionKeyService.BuildSectionName(sectionTags);
+
+        SectionDto dto = new SectionDto
+        {
+            Id = sectionId,
+            Name = sectionName,
+            Tags = sectionTags,
+            ArticlesCount = articlesCount
+        };
+
+        return dto;
+    }
+
+    /// <summary>
+    /// Вычисляет время сортировки статьи по UpdatedAtUtc или CreatedAtUtc
+    /// </summary>
+    private static DateTimeOffset GetSortTime(
+        DateTimeOffset createdAtUtc,
+        DateTimeOffset? updatedAtUtc)
+    {
+        return updatedAtUtc ?? createdAtUtc;
     }
 }
