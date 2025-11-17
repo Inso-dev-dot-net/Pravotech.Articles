@@ -12,7 +12,7 @@ using Pravotech.Articles.Infrastructure.Persistence;
 namespace Pravotech.Articles.Infrastructure.Migrations
 {
     [DbContext(typeof(ArticlesDbContext))]
-    [Migration("20251116231028_InitialCreate")]
+    [Migration("20251117113501_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
