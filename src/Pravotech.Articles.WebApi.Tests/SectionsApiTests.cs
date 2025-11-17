@@ -39,11 +39,16 @@ public sealed class SectionsApiTests
     [Fact]
     public async Task GetSections_ShouldReturnEmptyList_WhenNoArticles()
     {
+        await DeleteAllArticlesAsync();
+
+        // act: теперь реально не должно быть ни одной статьи, а значит и разделов
         HttpResponseMessage response = await _client.GetAsync("/api/sections");
+        response.EnsureSuccessStatusCode();
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        List<SectionDto>? sections =
+            await response.Content.ReadFromJsonAsync<List<SectionDto>>();
 
-        List<SectionDto>? sections = await response.Content.ReadFromJsonAsync<List<SectionDto>>();
+        // assert
         sections.Should().NotBeNull();
         sections!.Should().BeEmpty();
     }
@@ -51,6 +56,7 @@ public sealed class SectionsApiTests
     [Fact]
     public async Task Sections_ShouldBeCreatedForUniqueTagSets_AndCountArticles()
     {
+        await DeleteAllArticlesAsync();
         // arrange
         ArticleDto a1 = await CreateArticleAsync(
             "Статья 1",
@@ -97,6 +103,7 @@ public sealed class SectionsApiTests
     [Fact]
     public async Task Sections_ShouldIgnoreTagOrder_WhenGrouping()
     {
+        await DeleteAllArticlesAsync();
         // arrange: создаем две статьи с одинаковым набором тегов, но в разном порядке
         ArticleDto s1 = await CreateArticleAsync(
             "Первая",
@@ -124,6 +131,8 @@ public sealed class SectionsApiTests
     [Fact]
     public async Task GetSectionArticles_ShouldReturnArticlesSortedByUpdatedThenCreated()
     {
+        await DeleteAllArticlesAsync();
+
         // arrange: создаем две статьи в одном разделе
         ArticleDto a1 = await CreateArticleAsync(
             "Статья 1",
@@ -140,7 +149,13 @@ public sealed class SectionsApiTests
         List<SectionDto>? sections = await sectionsResponse.Content.ReadFromJsonAsync<List<SectionDto>>();
         sections.Should().NotBeNull();
 
-        SectionDto section = sections!.Single();
+        string[] expectedTags = { "Backend", "C#" };
+
+        // находим раздел с нужным набором тегов (без учёта порядка)
+        SectionDto section = sections!
+            .First(s =>
+                s.Tags.Count == expectedTags.Length &&
+                expectedTags.All(t => s.Tags.Contains(t)));
 
         // обновляем вторую статью, чтобы она стала "посвежее"
         UpsertArticleRequest updateSecond = new()
@@ -166,5 +181,36 @@ public sealed class SectionsApiTests
         // ожидаем, что обновленная статья будет первой по убыванию Updated/Created
         articles![0].Id.Should().Be(a2.Id);
         articles[0].Title.Should().Be(updateSecond.Title);
+    }
+
+    private async Task DeleteAllArticlesAsync()
+    {
+        // получаем все разделы
+        HttpResponseMessage sectionsResponse = await _client.GetAsync("/api/sections");
+        sectionsResponse.EnsureSuccessStatusCode();
+
+        List<SectionDto>? sections =
+            await sectionsResponse.Content.ReadFromJsonAsync<List<SectionDto>>()
+            ?? new List<SectionDto>();
+
+        foreach (SectionDto section in sections)
+        {
+            HttpResponseMessage articlesResponse =
+                await _client.GetAsync($"/api/sections/{section.Id}/articles");
+
+            articlesResponse.EnsureSuccessStatusCode();
+
+            List<ArticleDto>? articles =
+                await articlesResponse.Content.ReadFromJsonAsync<List<ArticleDto>>()
+                ?? new List<ArticleDto>();
+
+            foreach (ArticleDto article in articles)
+            {
+                HttpResponseMessage deleteResponse =
+                    await _client.DeleteAsync($"/api/articles/{article.Id}");
+
+                deleteResponse.EnsureSuccessStatusCode();
+            }
+        }
     }
 }
